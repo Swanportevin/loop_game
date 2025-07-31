@@ -1,28 +1,30 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject zombiePrefab; // Reference to the zombie prefab
-    private Vector3 spawnPoint; // Point where zombies will spawn
-    private int zombieCount = 0; // Counter for spawned zombies
-    public int maxZombies = 10; // Maximum number of zombies allowed
-    public float spawnAreaSize = 20f;
-    public GameObject PlayerOrigin;
+    public GameObject zombiePrefab;       // Reference to the zombie prefab
+    public int maxZombies = 10;           // Max zombies to spawn
+    public float spawnAreaSize = 1000f;    // Size of the spawn area
+    public GameObject PlayerOrigin;       // Player reference for offset
+    public GameObject ParentObject;       // Parent object for spawned zombies
+
+    private int zombieCount = 0;
 
     void Start()
     {
-        SpawnZombies();
+        StartCoroutine(SpawnZombiesLoop());
     }
 
-    void SpawnZombies()
+    private IEnumerator SpawnZombiesLoop()
     {
-        for (int i = 0; i < maxZombies; i++)
+        while (zombieCount < maxZombies)
         {
             Vector3 spawnPosition = GetRandomPositionInArea();
-            Instantiate(zombiePrefab, spawnPosition, Quaternion.identity);
+            Instantiate(zombiePrefab, spawnPosition, Quaternion.identity, ParentObject.transform);
             zombieCount++;
+
+            yield return new WaitForSeconds(Random.Range(1f, 5f)); // Wait before spawning the next one
         }
     }
 
@@ -31,8 +33,10 @@ public class GameManager : MonoBehaviour
         float halfSize = spawnAreaSize / 2f;
         float x = Random.Range(-halfSize, halfSize);
         float z = Random.Range(-halfSize, halfSize);
-        float y = 0f; // Ground level
+        float y = 2.5f; // Slightly above ground
+        Debug.Log(x);
+        Debug.Log(z);
 
-        return PlayerOrigin.transform.position + new Vector3(x, y+3, z);
+        return PlayerOrigin.transform.position + new Vector3(x, y, z);
     }
 }

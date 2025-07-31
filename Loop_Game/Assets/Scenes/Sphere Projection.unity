@@ -1036,8 +1036,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zombiePrefab: {fileID: 3846934528812841405, guid: 1fb69b27e89c94ba794d4deb54f069e3, type: 3}
   maxZombies: 10
-  spawnAreaSize: 20
+  spawnAreaSize: 100
   PlayerOrigin: {fileID: 1500596850}
+  ParentObject: {fileID: 830438482}
 --- !u!4 &1912245295
 Transform:
   m_ObjectHideFlags: 0
