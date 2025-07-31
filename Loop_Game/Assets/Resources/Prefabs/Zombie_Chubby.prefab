@@ -52,8 +52,89 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie_Chubby
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+      propertyPath: m_TagString
+      value: zombie
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1132706017778908635}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5287169112073299868}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2434152918224136755}
   m_SourcePrefab: {fileID: 100100000, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+--- !u!1 &1376129867824938307 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+  m_PrefabInstance: {fileID: 2295031524339187730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!111 &-1132706017778908635
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376129867824938307}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 411144970636102366, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+  - {fileID: 4447012609936615250, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+  - {fileID: -3663672522963054737, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+  - {fileID: 1272170038971011774, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+  - {fileID: -4592842328519117816, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+  - {fileID: 1395189703230314720, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+  - {fileID: -950862550323916170, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+  - {fileID: -5599002979973759676, guid: 7dc12fcb35b18456e904e6600cdc2645, type: 3}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &5287169112073299868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376129867824938307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a8c3be9f7374d4c9c9e3846d4db49e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 2
+--- !u!54 &-2434152918224136755
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376129867824938307}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
