@@ -10,107 +10,96 @@ public class SphereMap : MonoBehaviour
     public GameObject objectContainer;
     public GameObject playerOrigin;
 
-    void Start()
+    void PlaceObjectsOnSphere()
     {
-        if (raycastSource == null) return;
+        if (raycastSource == null || objectContainer == null || playerOrigin == null) return;
 
-        // Ray from object to sphere center
+        // Remove previous duplicates
+        foreach (Transform t in transform)
+        {
+            if (t.gameObject != this.gameObject)
+                Destroy(t.gameObject);
+        }
+
         Vector3 sphereCenter = transform.position;
-        Vector3 origin = raycastSource.transform.position;
-        Vector3 direction = (sphereCenter - origin).normalized;
-
-        // Sphere collider required for intersection
         SphereCollider sphereCollider = GetComponent<SphereCollider>();
-        if (sphereCollider == null)
-        {
-            Debug.LogWarning("SphereMap: No SphereCollider found on sphere.");
-            return;
-        }
+        float radius = sphereCollider != null ? sphereCollider.radius * transform.localScale.x : 1.0f;
 
-        Ray ray = new Ray(origin, direction);
-        RaycastHit hit;
-        Vector3 intersection = Vector3.zero;
-        bool hasIntersection = false;
-        if (sphereCollider.Raycast(ray, out hit, Vector3.Distance(origin, sphereCenter) + sphereCollider.radius))
-        {
-            Debug.Log($"Ray hit sphere at: {hit.point}");
-            intersection = hit.point;
-            hasIntersection = true;
-        }
-        else
-        {
-            Debug.Log("Ray did not hit the sphere.");
-        }
-
-        if (!hasIntersection) return;
-
+        Vector3 raycastOrigin = raycastSource.transform.position;
         Vector3 playerPosition = playerOrigin.transform.position;
         int object_count = objectContainer.transform.childCount;
-        Debug.Log($"The object container has {object_count} children");
 
-        // Get sphere center and radius
-        Vector3 sphereCenterLocal = transform.position;
-        SphereCollider sphereColliderLocal = GetComponent<SphereCollider>();
-        float radius = sphereColliderLocal != null ? sphereColliderLocal.radius * transform.localScale.x : 1.0f;
+        // Get player yaw (rotation around y axis)
+        float playerYaw = playerOrigin.transform.eulerAngles.y * Mathf.Deg2Rad;
 
-        // Calculate plane bounds for normalization
-        Bounds planeBounds = new Bounds(playerPosition, Vector3.zero);
-        for (int i = 0; i < object_count; i++)
-        {
-            GameObject child = objectContainer.transform.GetChild(i).gameObject;
-            planeBounds.Encapsulate(child.transform.position);
-        }
-
+        float diameter = radius * 2f;
         for (int i = 0; i < object_count; i++)
         {
             GameObject child = objectContainer.transform.GetChild(i).gameObject;
             Vector3 child_pos = child.transform.position;
-            float height_offset = child.transform.position.y;
-            Vector3 relative_pos = child_pos - playerPosition;
-            // remove y component:
-            relative_pos.y = 0.0f;
+            float height_offset = child_pos.y;
 
-            // Normalize relative position to [-1,1] range based on plane bounds
-            float normX = 0f, normY = 0f;
-            if (planeBounds.size.x > 0) normX = (child_pos.x - playerPosition.x) / (planeBounds.size.x / 2f);
-            if (planeBounds.size.z > 0) normY = (child_pos.z - playerPosition.z) / (planeBounds.size.z / 2f);
+            // 1. Distance and angle from player
+            Vector3 rel = child_pos - playerPosition;
+            rel.y = 0f;
+            float dist = rel.magnitude;
+            if (dist > diameter)
+            {
+                // Don't clone if further than 1 diameter
+                continue;
+            }
+            float angle = Mathf.Atan2(rel.z, rel.x); // angle in xz-plane
 
-            // Map normalized coordinates to latitude/longitude offsets
-            float maxLat = 60f; // degrees from intersection point, adjust as needed
-            float maxLon = 60f;
-            float latOffset = normY * maxLat;
-            float lonOffset = normX * maxLon;
+            // Add player yaw to angle so projection rotates with player view
+            float rotatedAngle = angle + playerYaw;
 
-            // Get intersection's spherical coordinates
-            Vector3 sphereDir = (intersection - sphereCenterLocal).normalized;
-            float baseLat = Mathf.Acos(sphereDir.y); // theta
-            float baseLon = Mathf.Atan2(sphereDir.z, sphereDir.x); // phi
+            // 2. Calculate a point on a circle around the raycast origin hitpoint
+            // First, raycast from raycastOrigin to sphere center to get hitpoint
+            Vector3 toCenter = (sphereCenter - raycastOrigin).normalized;
+            Ray ray = new Ray(raycastOrigin, toCenter);
+            RaycastHit hit;
+            Vector3 hitpoint = sphereCenter;
+            if (sphereCollider != null && sphereCollider.Raycast(ray, out hit, Vector3.Distance(raycastOrigin, sphereCenter) + radius))
+            {
+                hitpoint = hit.point;
+            }
 
-            // Apply offsets
-            float newLat = baseLat + Mathf.Deg2Rad * latOffset;
-            float newLon = baseLon + Mathf.Deg2Rad * lonOffset;
+            // 3. Calculate offset position on tangent plane at hitpoint
+            Vector3 tangentRight = Vector3.Cross(Vector3.up, (hitpoint - sphereCenter).normalized).normalized;
+            Vector3 tangentForward = Vector3.Cross((hitpoint - sphereCenter).normalized, tangentRight).normalized;
+            Vector3 offsetOnPlane = hitpoint + tangentRight * Mathf.Cos(rotatedAngle) * dist + tangentForward * Mathf.Sin(rotatedAngle) * dist;
 
-            // Convert spherical to cartesian
-            float x = radius * Mathf.Sin(newLat) * Mathf.Cos(newLon);
-            float y = radius * Mathf.Cos(newLat);
-            float z = radius * Mathf.Sin(newLat) * Mathf.Sin(newLon);
+            // 4. Raycast from offset position (slightly off sphere) to center
+            Vector3 normal = (offsetOnPlane - sphereCenter).normalized;
+            Vector3 offsetRayOrigin = offsetOnPlane + normal * 0.1f; // offset a bit off sphere
+            Ray offsetRay = new Ray(offsetRayOrigin, sphereCenter - offsetRayOrigin);
+            RaycastHit offsetHit;
+            Vector3 mapped_position = offsetOnPlane;
+            if (sphereCollider != null && sphereCollider.Raycast(offsetRay, out offsetHit, Vector3.Distance(offsetRayOrigin, sphereCenter) + radius))
+            {
+                mapped_position = offsetHit.point;
+            }
 
-            Vector3 mapped_position = sphereCenterLocal + new Vector3(x, y, z);
-
-            // Orient so up is normal to sphere at mapped position, and forward is tangent to sphere
-            Vector3 sphereNormal = (mapped_position - sphereCenterLocal).normalized;
-            Vector3 side = Vector3.Cross(Vector3.Cross(Vector3.up, sphereNormal), sphereNormal);
-
+            // 5. Place object at hitpoint with y offset
+            Vector3 sphereNormal = (mapped_position - sphereCenter).normalized;
             mapped_position += sphereNormal * height_offset;
 
-            GameObject duplicate_object = Instantiate(child, mapped_position, Quaternion.LookRotation(sphereNormal, side));
-            duplicate_object.transform.SetParent(transform); // Make sphere parent
-
+            // Orient so up is normal to sphere at mapped position, and forward is original child forward projected onto tangent plane
+            Vector3 childForward = child.transform.forward;
+            Vector3 projectedForward = Vector3.ProjectOnPlane(childForward, sphereNormal).normalized;
+            if (projectedForward.sqrMagnitude < 0.001f)
+            {
+                projectedForward = Vector3.Cross(Vector3.up, sphereNormal).normalized;
             }
+            Quaternion rot = Quaternion.LookRotation(sphereNormal, projectedForward);
+            GameObject duplicate_object = Instantiate(child, mapped_position, rot);
+            duplicate_object.transform.SetParent(transform);
+        }
     }
 
     void Update()
     {
+        PlaceObjectsOnSphere();
         if (raycastSource == null) return;
         Vector3 sphereCenter = transform.position;
         Vector3 origin = raycastSource.transform.position;

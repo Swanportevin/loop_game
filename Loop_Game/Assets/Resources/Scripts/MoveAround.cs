@@ -6,17 +6,21 @@ public class MoveAround : MonoBehaviour
 {
     public float moveSpeed = 50f;
     public float rotationSpeed = 5f;
+    public bool movementEnabled = true; // Optionally disable movement
 
     private float yaw;
 
     void Update()
     {
         // --- Movement (WASD relative to object's forward/right) ---
-        float h = Input.GetAxis("Horizontal"); // A/D
-        float v = Input.GetAxis("Vertical");   // W/S
-
-        Vector3 move = transform.forward * v + transform.right * h;
-        transform.position += move * moveSpeed * Time.deltaTime;
+        if (movementEnabled)
+        {
+            float h = Input.GetAxis("Horizontal"); // A/D
+            float v = Input.GetAxis("Vertical");   // W/S
+            Vector3 input = new Vector3(h, 0f, v);
+            Vector3 move = transform.TransformDirection(input);
+            transform.position += move * moveSpeed * Time.deltaTime;
+        }
 
         // --- Rotation (trackpad or mouse X) ---
         float mouseX = Input.GetAxis("Mouse X"); // Trackpad works as mouse
