@@ -197,7 +197,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &589397647
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -524,15 +524,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2382799219754379413, guid: 7b6b7ee6aae154f94b04b54b6955c5db, type: 3}
       propertyPath: m_Color.b
-      value: 0.2503815
+      value: 0.96808755
       objectReference: {fileID: 0}
     - target: {fileID: 2382799219754379413, guid: 7b6b7ee6aae154f94b04b54b6955c5db, type: 3}
       propertyPath: m_Color.g
-      value: 0.90588236
+      value: 0.9716981
       objectReference: {fileID: 0}
     - target: {fileID: 2382799219754379413, guid: 7b6b7ee6aae154f94b04b54b6955c5db, type: 3}
       propertyPath: m_Color.r
-      value: 0.07450979
+      value: 0.9671146
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382799219754379413, guid: 7b6b7ee6aae154f94b04b54b6955c5db, type: 3}
+      propertyPath: m_Intensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382799219754379413, guid: 7b6b7ee6aae154f94b04b54b6955c5db, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
