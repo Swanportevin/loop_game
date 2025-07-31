@@ -65,6 +65,7 @@ public class SphereMap : MonoBehaviour
         {
             GameObject child = objectContainer.transform.GetChild(i).gameObject;
             Vector3 child_pos = child.transform.position;
+            float height_offset = child.transform.position.y;
             Vector3 relative_pos = child_pos - playerPosition;
             // remove y component:
             relative_pos.y = 0.0f;
@@ -93,17 +94,19 @@ public class SphereMap : MonoBehaviour
             float x = radius * Mathf.Sin(newLat) * Mathf.Cos(newLon);
             float y = radius * Mathf.Cos(newLat);
             float z = radius * Mathf.Sin(newLat) * Mathf.Sin(newLon);
+
             Vector3 mapped_position = sphereCenterLocal + new Vector3(x, y, z);
 
-            GameObject duplicate_object = Instantiate(child);
-            duplicate_object.transform.position = mapped_position;
+            // Orient so up is normal to sphere at mapped position, and forward is tangent to sphere
+            Vector3 sphereNormal = (mapped_position - sphereCenterLocal).normalized;
+            Vector3 side = Vector3.Cross(Vector3.Cross(Vector3.up, sphereNormal), sphereNormal);
+
+            mapped_position += sphereNormal * height_offset;
+
+            GameObject duplicate_object = Instantiate(child, mapped_position, Quaternion.LookRotation(sphereNormal, side));
             duplicate_object.transform.SetParent(transform); // Make sphere parent
 
-            // Orient so up is normal to sphere at mapped position, preserving original local rotation
-            Vector3 sphereNormal = (mapped_position - sphereCenterLocal).normalized;
-            Quaternion alignToNormal = Quaternion.FromToRotation(duplicate_object.transform.up, sphereNormal);
-            duplicate_object.transform.rotation = alignToNormal * duplicate_object.transform.rotation;
-        }
+            }
     }
 
     void Update()
