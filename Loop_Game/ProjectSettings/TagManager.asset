@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - forest
+  - zombie
   layers:
   - Default
   - TransparentFX
