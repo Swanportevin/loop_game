@@ -5,9 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject chunk;
-    public List<GameObject> trees;
-    public List<GameObject> rocks;
-    public List<GameObject> grass;
+    private List<GameObject> trees;
+    private List<GameObject> rocks;
+    private List<GameObject> grass;
     public List<GameObject> zombies;
     // Start is called before the first frame update
     void Start()
