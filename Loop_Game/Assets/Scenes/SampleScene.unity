@@ -465,6 +465,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Low Poly Forest
       objectReference: {fileID: 0}
+    - target: {fileID: 2382799219754379413, guid: 7b6b7ee6aae154f94b04b54b6955c5db, type: 3}
+      propertyPath: m_Color.b
+      value: 0.2503815
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382799219754379413, guid: 7b6b7ee6aae154f94b04b54b6955c5db, type: 3}
+      propertyPath: m_Color.g
+      value: 0.90588236
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382799219754379413, guid: 7b6b7ee6aae154f94b04b54b6955c5db, type: 3}
+      propertyPath: m_Color.r
+      value: 0.07450979
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
