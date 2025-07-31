@@ -7,14 +7,12 @@ public class Zombie : MonoBehaviour
 {
     private float OldSpeed; // Store the old speed when the zombie is hit
     public float speed = 2f;
-    private Transform target;
-    private Animator mAnimator;
+    private GameObject target; // Reference to the player origin
+    public Animator mAnimator;
 
     void Start()
     {
-        // Find the camera as the target
-        target = Camera.main.transform;
-        mAnimator = GetComponent<Animator>();
+        target = GameObject.FindGameObjectWithTag("Player"); // Find the camera as the target
     }
 
     void Update()
@@ -28,7 +26,7 @@ public class Zombie : MonoBehaviour
         if (target == null) return;
 
         // Move toward the camera
-        Vector3 direction = (target.position - transform.position).normalized;
+        Vector3 direction = (target.transform.position - transform.position).normalized;
         direction.y = 0f; // Keep movement flat
 
         // Rotate toward the camera
@@ -78,7 +76,7 @@ public class Zombie : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("MainCamera"))
+        if (other.CompareTag("Player"))
         {
             OldSpeed = speed; // Store the current speed
             speed = 0;
@@ -90,7 +88,7 @@ public class Zombie : MonoBehaviour
     }
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("MainCamera"))
+        if (other.CompareTag("Player"))
         {
             StopAllCoroutines(); // Stop any ongoing punch animations
             speed = OldSpeed; // Reset speed when exiting the camera trigger
