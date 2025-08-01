@@ -84,6 +84,11 @@ public class SphereMap : MonoBehaviour
             Vector3 _right_player = playerOrigin.transform.right;
             Vector2 right_player = new Vector2(_right_player.x,_right_player.z);
             float angle = Vector2.SignedAngle(right_player, rel); // angle in xz-plane
+            // Prevent spinning when very close
+            if (dist < 0.1f)
+            {
+                angle = 0f;
+            }
 
 
             Vector3 _right_raycast = raycastSource.transform.right;
@@ -115,12 +120,14 @@ public class SphereMap : MonoBehaviour
             Quaternion origRot = child.transform.rotation;
             // 2. Compute the additional rotation needed to align up (Y) to the sphere normal
             Quaternion alignUp = Quaternion.FromToRotation(Vector3.up, sphereNormal);
+            Quaternion rotateAxis = Quaternion.AngleAxis(angle, sphereNormal);
 
-            Quaternion finalRot = alignUp * origRot;
+
+            Quaternion finalRot =  rotateAxis * alignUp * origRot;
+
             GameObject duplicate_object = Instantiate(child, mapped_position, finalRot);
-            ModifyObject(duplicate_object);
 
-            Vector3 forward = (raycastOrigin - mapped_position).normalized;
+            ModifyObject(duplicate_object);
 
             duplicate_object.transform.SetParent(transform);
         }

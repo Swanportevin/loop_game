@@ -13969,7 +13969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raycastSource: {fileID: 1931801222}
   staticObjectContainer: {fileID: 830438482}
-  aiObjectContainer: {fileID: 0}
+  aiObjectContainer: {fileID: 310813055}
   playerOrigin: {fileID: 1500596850}
 --- !u!135 &893432651
 SphereCollider:
