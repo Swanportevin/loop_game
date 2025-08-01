@@ -10,6 +10,30 @@ public class SphereMap : MonoBehaviour
     public GameObject objectContainer;
     public GameObject playerOrigin;
 
+    Vector3 GetPointOnSmallCircle(Vector3 hitpoint, Vector3 sphereCenter, float radius, float geodesicDistance, Vector3 right, float angleDegrees)
+    {
+        // Step 1: Normal from center to hitpoint (unit)
+        Vector3 A = (hitpoint - sphereCenter).normalized;
+
+        // Step 2: Tangent basis vectors (u and v) in hitpoint's tangent plane
+        Vector3 u = Vector3.ProjectOnPlane(right, A).normalized;
+        Vector3 v = Vector3.Cross(A, u); // perpendicular in tangent plane
+
+        // Step 3: Convert geodesic distance to central angle θ
+        float theta = geodesicDistance / radius;
+
+        // Step 4: Convert angleDegrees to radians and rotate
+        float angleRad = angleDegrees * Mathf.Deg2Rad;
+
+        // Step 5: Compute point on sphere
+        Vector3 direction = Mathf.Cos(angleRad) * u + Mathf.Sin(angleRad) * v;
+        Vector3 point = Mathf.Cos(theta) * A + Mathf.Sin(theta) * direction;
+
+        // Step 6: Scale back to sphere radius and translate to world space
+        return sphereCenter + point * radius;
+    }
+
+
     void PlaceObjectsOnSphere()
     {
         if (raycastSource == null || objectContainer == null || playerOrigin == null) return;
@@ -32,6 +56,17 @@ public class SphereMap : MonoBehaviour
         // Get player yaw (rotation around y axis)
         float playerYaw = playerOrigin.transform.eulerAngles.y * Mathf.Deg2Rad;
 
+        // Calculate a point on a circle around the raycast origin hitpoint
+        // First, raycast from raycastOrigin to sphere center to get hitpoint
+        Vector3 toCenter = (sphereCenter - raycastOrigin).normalized;
+        Ray ray = new Ray(raycastOrigin, toCenter);
+        RaycastHit hit;
+        Vector3 hitpoint = sphereCenter;
+        if (sphereCollider != null && sphereCollider.Raycast(ray, out hit, Vector3.Distance(raycastOrigin, sphereCenter) + radius))
+        {
+            hitpoint = hit.point;
+        }
+
         float diameter = radius * 2f;
         for (int i = 0; i < object_count; i++)
         {
@@ -40,59 +75,55 @@ public class SphereMap : MonoBehaviour
             float height_offset = child_pos.y;
 
             // 1. Distance and angle from player
-            Vector3 rel = child_pos - playerPosition;
-            rel.y = 0f;
+            Vector3 _rel = child_pos - playerPosition;
+            Vector2 rel = new Vector2(_rel.x, _rel.z);
             float dist = rel.magnitude;
             if (dist > diameter)
             {
                 // Don't clone if further than 1 diameter
                 continue;
             }
-            float angle = Mathf.Atan2(rel.z, rel.x); // angle in xz-plane
 
-            // Add player yaw to angle so projection rotates with player view
-            float rotatedAngle = angle + playerYaw;
+            Vector3 _right_player = playerOrigin.transform.right;
+            Vector2 right_player = new Vector2(_right_player.x,_right_player.z);
+            float angle = Vector2.SignedAngle(right_player, rel); // angle in xz-plane
 
-            // 2. Calculate a point on a circle around the raycast origin hitpoint
-            // First, raycast from raycastOrigin to sphere center to get hitpoint
-            Vector3 toCenter = (sphereCenter - raycastOrigin).normalized;
-            Ray ray = new Ray(raycastOrigin, toCenter);
-            RaycastHit hit;
-            Vector3 hitpoint = sphereCenter;
-            if (sphereCollider != null && sphereCollider.Raycast(ray, out hit, Vector3.Distance(raycastOrigin, sphereCenter) + radius))
-            {
-                hitpoint = hit.point;
-            }
 
-            // 3. Calculate offset position on tangent plane at hitpoint
-            Vector3 tangentRight = Vector3.Cross(Vector3.up, (hitpoint - sphereCenter).normalized).normalized;
-            Vector3 tangentForward = Vector3.Cross((hitpoint - sphereCenter).normalized, tangentRight).normalized;
-            Vector3 offsetOnPlane = hitpoint + tangentRight * Mathf.Cos(rotatedAngle) * dist + tangentForward * Mathf.Sin(rotatedAngle) * dist;
+            Vector3 _right_raycast = raycastSource.transform.right;
+            Vector2 right_raycast = new Vector2(_right_raycast.x,_right_raycast.z);
 
             // 4. Raycast from offset position (slightly off sphere) to center
-            Vector3 normal = (offsetOnPlane - sphereCenter).normalized;
-            Vector3 offsetRayOrigin = offsetOnPlane + normal * 0.1f; // offset a bit off sphere
+            Vector3 newPoint = GetPointOnSmallCircle(hitpoint, sphereCenter, radius, dist, right_raycast, angle);
+            Vector3 normal = (newPoint - sphereCenter).normalized;
+            Vector3 offsetRayOrigin = newPoint + normal * 2f; // offset a bit off sphere
+
             Ray offsetRay = new Ray(offsetRayOrigin, sphereCenter - offsetRayOrigin);
             RaycastHit offsetHit;
-            Vector3 mapped_position = offsetOnPlane;
+            Vector3 mapped_position = newPoint;
+
             if (sphereCollider != null && sphereCollider.Raycast(offsetRay, out offsetHit, Vector3.Distance(offsetRayOrigin, sphereCenter) + radius))
             {
                 mapped_position = offsetHit.point;
             }
+        
 
-            // 5. Place object at hitpoint with y offset
+            // // 5. Place object at hitpoint with y offset
             Vector3 sphereNormal = (mapped_position - sphereCenter).normalized;
             mapped_position += sphereNormal * height_offset;
 
-            // Orient so up is normal to sphere at mapped position, and forward is original child forward projected onto tangent plane
-            Vector3 childForward = child.transform.forward;
-            Vector3 projectedForward = Vector3.ProjectOnPlane(childForward, sphereNormal).normalized;
-            if (projectedForward.sqrMagnitude < 0.001f)
-            {
-                projectedForward = Vector3.Cross(Vector3.up, sphereNormal).normalized;
-            }
-            Quaternion rot = Quaternion.LookRotation(sphereNormal, projectedForward);
-            GameObject duplicate_object = Instantiate(child, mapped_position, rot);
+            // Debug: Draw the normal vector at the mapped position
+            Debug.DrawRay(mapped_position, sphereNormal * radius * 0.5f, Color.green, 0.02f, false);
+
+            // 1. Start with the original rotation
+            Quaternion origRot = child.transform.rotation;
+            // 2. Compute the additional rotation needed to align up (Y) to the sphere normal
+            Quaternion alignUp = Quaternion.FromToRotation(Vector3.up, sphereNormal);
+
+            Quaternion finalRot = alignUp * origRot;
+            GameObject duplicate_object = Instantiate(child, mapped_position, finalRot);
+
+            Vector3 forward = (raycastOrigin - mapped_position).normalized;
+
             duplicate_object.transform.SetParent(transform);
         }
     }
