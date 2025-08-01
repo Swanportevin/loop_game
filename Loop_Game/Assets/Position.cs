@@ -34,15 +34,15 @@ public class Position : MonoBehaviour
             Vector3 newPos = hit.point + tangentNormal * height;
             transform.position = newPos;
 
-            // Reference direction: from sphere center to raycast origin, projected onto tangent plane
-            Vector3 refDir = Vector3.ProjectOnPlane(raycastOrigin.position - sphereCenter, tangentNormal).normalized;
-            if (refDir.sqrMagnitude < 0.001f)
+            // Stable reference direction: use tangentRight (perpendicular to tangentNormal and world up)
+            Vector3 tangentRight = Vector3.Cross(Vector3.up, tangentNormal).normalized;
+            if (tangentRight.sqrMagnitude < 0.001f)
             {
-                refDir = Vector3.Cross(Vector3.up, tangentNormal).normalized;
+                tangentRight = Vector3.Cross(Vector3.forward, tangentNormal).normalized;
             }
 
             // Apply yaw (around tangent normal)
-            Vector3 lookDir = Quaternion.AngleAxis(yawOffset, tangentNormal) * refDir;
+            Vector3 lookDir = Quaternion.AngleAxis(yawOffset, tangentNormal) * tangentRight;
 
             // Apply pitch (rotate around axis perpendicular to lookDir and tangentNormal)
             Vector3 pitchAxis = Vector3.Cross(lookDir, tangentNormal).normalized;

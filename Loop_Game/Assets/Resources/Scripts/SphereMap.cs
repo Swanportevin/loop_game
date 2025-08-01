@@ -38,8 +38,9 @@ public class SphereMap : MonoBehaviour
 
     
 
-    void PlaceObjectsOnSphere(GameObject container, System.Action<GameObject> ModifyObject)
+    void PlaceObjectsOnSphere(GameObject container, System.Action<GameObject> ModifyObject, bool swapped_up)
     {
+
         if (raycastSource == null || container == null || playerOrigin == null) return;
 
         Vector3 sphereCenter = transform.position;
@@ -47,11 +48,7 @@ public class SphereMap : MonoBehaviour
         float radius = sphereCollider != null ? sphereCollider.radius * transform.localScale.x : 1.0f;
 
         Vector3 raycastOrigin = raycastSource.transform.position;
-        Vector3 playerPosition = playerOrigin.transform.position;
-        int object_count = container.transform.childCount;
 
-        // Get player yaw (rotation around y axis)
-        float playerYaw = playerOrigin.transform.eulerAngles.y * Mathf.Deg2Rad;
 
         // Calculate a point on a circle around the raycast origin hitpoint
         // First, raycast from raycastOrigin to sphere center to get hitpoint
@@ -63,6 +60,11 @@ public class SphereMap : MonoBehaviour
         {
             hitpoint = hit.point;
         }
+
+        // Get player yaw (rotation around y axis)
+        float playerYaw = playerOrigin.transform.eulerAngles.y * Mathf.Deg2Rad;
+        Vector3 playerPosition = playerOrigin.transform.position;
+        int object_count = container.transform.childCount;
 
         float diameter = radius * 2f;
         for (int i = 0; i < object_count; i++)
@@ -82,17 +84,17 @@ public class SphereMap : MonoBehaviour
             }
 
             Vector3 _right_player = playerOrigin.transform.right;
-            Vector2 right_player = new Vector2(_right_player.x,_right_player.z);
+            Vector2 right_player = new Vector2(_right_player.x, _right_player.z);
             float angle = Vector2.SignedAngle(right_player, rel); // angle in xz-plane
-            // Prevent spinning when very close
-            if (dist < 0.1f)
-            {
-                angle = 0f;
-            }
 
+
+            Vector3 _forward_dir = child.transform.forward;
+            Vector2 forward_dir = new Vector2(_forward_dir.x, _forward_dir.z);
+
+            float angle_child = Vector2.SignedAngle(forward_dir, rel);
 
             Vector3 _right_raycast = raycastSource.transform.right;
-            Vector2 right_raycast = new Vector2(_right_raycast.x,_right_raycast.z);
+            Vector2 right_raycast = new Vector2(_right_raycast.x, _right_raycast.z);
 
             // 4. Raycast from offset position (slightly off sphere) to center
             Vector3 newPoint = GetPointOnSmallCircle(hitpoint, sphereCenter, radius, dist, right_raycast, angle);
@@ -107,27 +109,32 @@ public class SphereMap : MonoBehaviour
             {
                 mapped_position = offsetHit.point;
             }
-        
 
-            // // 5. Place object at hitpoint with y offset
+
+            // 5. Place object at hitpoint with y offset
             Vector3 sphereNormal = (mapped_position - sphereCenter).normalized;
             mapped_position += sphereNormal * height_offset;
 
-            // Debug: Draw the normal vector at the mapped position
-            Debug.DrawRay(mapped_position, sphereNormal * radius * 0.5f, Color.green, 0.02f, false);
-
-            // 1. Start with the original rotation
-            Quaternion origRot = child.transform.rotation;
-            // 2. Compute the additional rotation needed to align up (Y) to the sphere normal
-            Quaternion alignUp = Quaternion.FromToRotation(Vector3.up, sphereNormal);
-            Quaternion rotateAxis = Quaternion.AngleAxis(angle, sphereNormal);
+            Quaternion finalRot;
 
 
-            Quaternion finalRot =  rotateAxis * alignUp * origRot;
+            Vector3 childForward = hitpoint - mapped_position;
+
+            if (swapped_up)
+            {
+                finalRot = Quaternion.LookRotation(sphereNormal, childForward);
+            }
+            else
+            {
+                finalRot = Quaternion.LookRotation(childForward, sphereNormal);
+            }
+            
 
             GameObject duplicate_object = Instantiate(child, mapped_position, finalRot);
 
             ModifyObject(duplicate_object);
+
+            Debug.DrawRay(duplicate_object.transform.position, duplicate_object.transform.forward * 2f, Color.red, 0.1f);
 
             duplicate_object.transform.SetParent(transform);
         }
@@ -143,13 +150,13 @@ public class SphereMap : MonoBehaviour
                 Destroy(t.gameObject);
         }
 
-        PlaceObjectsOnSphere(staticObjectContainer, (_gameobject) => {});
+        PlaceObjectsOnSphere(staticObjectContainer, (_gameobject) => {}, true);
         PlaceObjectsOnSphere(aiObjectContainer, (gameobject) =>
         {
             Destroy(gameobject.GetComponent<ZombieMovement>());
             Destroy(gameobject.GetComponent<NavMeshAgent>());
             
-        });
+        }, false);
 
         if (raycastSource == null) return;
         Vector3 sphereCenter = transform.position;
