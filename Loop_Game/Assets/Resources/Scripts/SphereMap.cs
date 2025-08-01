@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SphereMap : MonoBehaviour
 {
     // The object from which to cast the ray, selectable in Inspector
     public GameObject raycastSource;
-    public GameObject objectContainer;
+    public GameObject staticObjectContainer;
+    public GameObject aiObjectContainer;
     public GameObject playerOrigin;
 
     Vector3 GetPointOnSmallCircle(Vector3 hitpoint, Vector3 sphereCenter, float radius, float geodesicDistance, Vector3 right, float angleDegrees)
@@ -33,17 +36,11 @@ public class SphereMap : MonoBehaviour
         return sphereCenter + point * radius;
     }
 
+    
 
-    void PlaceObjectsOnSphere()
+    void PlaceObjectsOnSphere(GameObject container, System.Action<GameObject> ModifyObject)
     {
-        if (raycastSource == null || objectContainer == null || playerOrigin == null) return;
-
-        // Remove previous duplicates
-        foreach (Transform t in transform)
-        {
-            if (t.gameObject != this.gameObject)
-                Destroy(t.gameObject);
-        }
+        if (raycastSource == null || container == null || playerOrigin == null) return;
 
         Vector3 sphereCenter = transform.position;
         SphereCollider sphereCollider = GetComponent<SphereCollider>();
@@ -51,7 +48,7 @@ public class SphereMap : MonoBehaviour
 
         Vector3 raycastOrigin = raycastSource.transform.position;
         Vector3 playerPosition = playerOrigin.transform.position;
-        int object_count = objectContainer.transform.childCount;
+        int object_count = container.transform.childCount;
 
         // Get player yaw (rotation around y axis)
         float playerYaw = playerOrigin.transform.eulerAngles.y * Mathf.Deg2Rad;
@@ -70,7 +67,7 @@ public class SphereMap : MonoBehaviour
         float diameter = radius * 2f;
         for (int i = 0; i < object_count; i++)
         {
-            GameObject child = objectContainer.transform.GetChild(i).gameObject;
+            GameObject child = container.transform.GetChild(i).gameObject;
             Vector3 child_pos = child.transform.position;
             float height_offset = child_pos.y;
 
@@ -121,6 +118,7 @@ public class SphereMap : MonoBehaviour
 
             Quaternion finalRot = alignUp * origRot;
             GameObject duplicate_object = Instantiate(child, mapped_position, finalRot);
+            ModifyObject(duplicate_object);
 
             Vector3 forward = (raycastOrigin - mapped_position).normalized;
 
@@ -130,7 +128,22 @@ public class SphereMap : MonoBehaviour
 
     void Update()
     {
-        PlaceObjectsOnSphere();
+
+        // Remove previous duplicates
+        foreach (Transform t in transform)
+        {
+            if (t.gameObject != this.gameObject)
+                Destroy(t.gameObject);
+        }
+
+        PlaceObjectsOnSphere(staticObjectContainer, (_gameobject) => {});
+        PlaceObjectsOnSphere(aiObjectContainer, (gameobject) =>
+        {
+            Destroy(gameobject.GetComponent<ZombieMovement>());
+            Destroy(gameobject.GetComponent<NavMeshAgent>());
+            
+        });
+
         if (raycastSource == null) return;
         Vector3 sphereCenter = transform.position;
         Vector3 origin = raycastSource.transform.position;
