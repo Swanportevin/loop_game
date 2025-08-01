@@ -9,13 +9,15 @@ public class Zombie : MonoBehaviour
     public float speed = 2f;
     private GameObject target; // Reference to the player origin
     public Animator mAnimator;
+    private Rigidbody rb;
 
     void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player"); // Find the camera as the target
+        rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         MovingTowardsPlayer();
         AnimBasedOnSpeed(speed);
@@ -23,23 +25,21 @@ public class Zombie : MonoBehaviour
 
     public void MovingTowardsPlayer()
     {
-        if (target == null) return;
+        if (target == null || rb == null) return;
 
-        // Move toward the camera
         Vector3 direction = (target.transform.position - transform.position).normalized;
-        direction.y = 0f; // Keep movement flat
+        direction.y = 0f;
 
-        // Rotate toward the camera
         if (direction.magnitude > 0.1f)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * 5f);
 
-            // Move forward
-            transform.position += transform.forward * speed * Time.deltaTime;
+            // Use MovePosition instead of transform.position += ...
+            Vector3 moveTo = transform.position + transform.forward * speed * Time.fixedDeltaTime;
+            rb.MovePosition(moveTo);
         }
     }
-
     public void AnimBasedOnSpeed(float speed)
     {
         // Update the animator parameters based on speed
