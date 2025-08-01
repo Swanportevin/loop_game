@@ -17,7 +17,7 @@ public class MoveAround : MonoBehaviour
         {
             float h = Input.GetAxis("Horizontal"); // A/D
             float v = Input.GetAxis("Vertical");   // W/S
-            Vector3 input = new Vector3(h, 0f, v);
+            Vector3 input = new Vector3(h, 0f, -v);
             Vector3 move = transform.TransformDirection(input);
             transform.position += move * moveSpeed * Time.deltaTime;
         }
