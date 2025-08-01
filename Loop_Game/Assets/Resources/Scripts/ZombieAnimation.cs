@@ -3,10 +3,16 @@ using UnityEngine;
 public class ZombieAnimation : MonoBehaviour
 {
     public Animator mAnimator;
+    public int health = 5;
 
     void Start()
     {
         mAnimator = gameObject.GetComponent<Animator>();
+    }
+
+    void LateUpdate()
+    {
+        if (health <= 0) Destroy(gameObject);
     }
 
     public void AnimBasedOnSpeed(float speed)

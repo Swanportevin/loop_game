@@ -8,9 +8,8 @@ public class GameManager : MonoBehaviour
     public float spawnAreaSize = 1000f;    // Size of the spawn area
     public GameObject PlayerOrigin;       // Player reference for offset
     public GameObject ParentObject;       // Parent object for spawned zombies
-
     private int zombieCount = 0;
-
+    
     void Start()
     {
         StartCoroutine(SpawnZombiesLoop());
