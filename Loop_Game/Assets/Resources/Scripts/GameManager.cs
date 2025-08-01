@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
         float halfSize = spawnAreaSize / 2f;
         float x = Random.Range(-halfSize, halfSize);
         float z = Random.Range(-halfSize, halfSize);
-        float y = 2.5f; // Slightly above ground
+        float y = 0f; // Slightly above ground
         Debug.Log(x);
         Debug.Log(z);
 

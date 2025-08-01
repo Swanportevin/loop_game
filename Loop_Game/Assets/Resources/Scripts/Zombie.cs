@@ -2,44 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Zombie : MonoBehaviour
 {
     private float OldSpeed; // Store the old speed when the zombie is hit
-    public float speed = 2f;
     private GameObject target; // Reference to the player origin
     public Animator mAnimator;
+    private Rigidbody rb;
+    private NavMeshAgent agent;
 
     void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player"); // Find the camera as the target
+        rb = GetComponent<Rigidbody>();
+        agent = GetComponent<NavMeshAgent>();
+        agent.speed = Random.Range(1f,10f); // Set the speed of the NavMeshAgent
+        AnimBasedOnSpeed(agent.speed);
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        MovingTowardsPlayer();
-        AnimBasedOnSpeed(speed);
+        agent.destination = target.transform.position; // Set the destination to the player's position
     }
-
-    public void MovingTowardsPlayer()
-    {
-        if (target == null) return;
-
-        // Move toward the camera
-        Vector3 direction = (target.transform.position - transform.position).normalized;
-        direction.y = 0f; // Keep movement flat
-
-        // Rotate toward the camera
-        if (direction.magnitude > 0.1f)
-        {
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
-
-            // Move forward
-            transform.position += transform.forward * speed * Time.deltaTime;
-        }
-    }
-
     public void AnimBasedOnSpeed(float speed)
     {
         // Update the animator parameters based on speed
@@ -78,8 +63,8 @@ public class Zombie : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            OldSpeed = speed; // Store the current speed
-            speed = 0;
+            OldSpeed = agent.speed; // Store the current speed
+            agent.speed = 0;
             mAnimator.SetBool("Crawl", false);
             mAnimator.SetBool("Walk", false);
             mAnimator.SetBool("Run", false);
@@ -91,14 +76,14 @@ public class Zombie : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             StopAllCoroutines(); // Stop any ongoing punch animations
-            speed = OldSpeed; // Reset speed when exiting the camera trigger
-            AnimBasedOnSpeed(speed);
+            agent.speed = OldSpeed; // Reset speed when exiting the camera trigger
+            AnimBasedOnSpeed(agent.speed);
         }
     }
 
     private IEnumerator StartPunching()
     {
-        speed = 0;
+        agent.speed = 0;
         mAnimator.SetTrigger("Punch");
         yield return new WaitForSeconds(2f); // Wait for the punch animation to finish
         StartCoroutine(StartPunching());

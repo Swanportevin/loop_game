@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5249547985060894963}
   - component: {fileID: 1550136790693804087}
   - component: {fileID: 2590152479722815224}
-  - component: {fileID: -8104447378021860940}
   - component: {fileID: 4361365402886403314}
+  - component: {fileID: -6368800956614921753}
   m_Layer: 0
   m_Name: rock.012 (1)
   m_TagString: forest
@@ -85,8 +85,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &-8104447378021860940
-BoxCollider:
+--- !u!114 &4361365402886403314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5809823046538362579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 032117639973840409699f3993873b57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!135 &-6368800956614921753
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -104,17 +116,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.010049978, y: 0.009380003, z: 0.008304589}
+  m_Radius: 0.005024989
   m_Center: {x: -0.00025126082, y: -0.00020290958, z: 0.0032270001}
---- !u!114 &4361365402886403314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5809823046538362579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 032117639973840409699f3993873b57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
