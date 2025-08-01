@@ -6,7 +6,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(ZombieAnimation))]
 public class ZombieMovement : MonoBehaviour
 {
-    private float OldSpeed;
+    public float OldSpeed;
     private GameObject target;
     private NavMeshAgent agent;
     private ZombieAnimation zombieAnim;
@@ -17,6 +17,7 @@ public class ZombieMovement : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         zombieAnim = GetComponent<ZombieAnimation>();
         agent.speed = Random.Range(1f, 10f);
+        OldSpeed = agent.speed;
         zombieAnim.AnimBasedOnSpeed(agent.speed);
     }
 

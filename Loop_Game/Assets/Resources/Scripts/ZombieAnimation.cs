@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ZombieAnimation : MonoBehaviour
@@ -12,7 +13,15 @@ public class ZombieAnimation : MonoBehaviour
 
     void LateUpdate()
     {
-        if (health <= 0) Destroy(gameObject);
+        if (health <= 0) StartCoroutine(Die());
+    }
+
+    public IEnumerator Die()
+    {
+        mAnimator.SetTrigger("Die");
+        FindObjectOfType<GameManager>().zombieCount--;
+        yield return new WaitForSeconds(0.8f); // Wait for the death animation to finish
+        Destroy(gameObject); // Destroy the zombie after death animation   
     }
 
     public void AnimBasedOnSpeed(float speed)

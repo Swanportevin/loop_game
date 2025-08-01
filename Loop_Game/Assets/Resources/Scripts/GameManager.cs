@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
     public float spawnAreaSize = 1000f;    // Size of the spawn area
     public GameObject PlayerOrigin;       // Player reference for offset
     public GameObject ParentObject;       // Parent object for spawned zombies
-    private int zombieCount = 0;
+    public int zombieCount = 0;
+    private int instanceCount = 0;
     
     void Start()
     {
@@ -20,9 +21,10 @@ public class GameManager : MonoBehaviour
         while (zombieCount < maxZombies)
         {
             Vector3 spawnPosition = GetRandomPositionInArea();
-            Instantiate(zombiePrefab, spawnPosition, Quaternion.identity, ParentObject.transform);
+            GameObject obj = Instantiate(zombiePrefab, spawnPosition, Quaternion.identity, ParentObject.transform);
+            obj.name = "ZombieNumber"+instanceCount.ToString();
             zombieCount++;
-
+            instanceCount++;
             yield return new WaitForSeconds(Random.Range(1f, 5f)); // Wait before spawning the next one
         }
     }
@@ -33,8 +35,6 @@ public class GameManager : MonoBehaviour
         float x = Random.Range(-halfSize, halfSize);
         float z = Random.Range(-halfSize, halfSize);
         float y = 0f; // Slightly above ground
-        Debug.Log(x);
-        Debug.Log(z);
 
         return PlayerOrigin.transform.position + new Vector3(x, y, z);
     }
