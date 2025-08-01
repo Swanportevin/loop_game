@@ -17,13 +17,13 @@ public class Zombie : MonoBehaviour
         target = GameObject.FindGameObjectWithTag("Player"); // Find the camera as the target
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = Random.Range(1f,10f); // Set the speed of the NavMeshAgent
+        AnimBasedOnSpeed(agent.speed);
     }
 
     void FixedUpdate()
     {
         agent.destination = target.transform.position; // Set the destination to the player's position
-        agent.speed = 2; // Set the speed of the NavMeshAgent
-        AnimBasedOnSpeed(agent.speed);
     }
     public void AnimBasedOnSpeed(float speed)
     {
