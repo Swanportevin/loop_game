@@ -38,7 +38,7 @@ public class SphereMap : MonoBehaviour
 
     
 
-    void PlaceObjectsOnSphere(GameObject container, System.Action<GameObject> ModifyObject, bool swapped_up)
+    void PlaceObjectsOnSphere(GameObject container, System.Action<GameObject> ModifyObject, bool face_player)
     {
 
         if (raycastSource == null || container == null || playerOrigin == null) return;
@@ -120,13 +120,13 @@ public class SphereMap : MonoBehaviour
 
             Vector3 childForward = hitpoint - mapped_position;
 
-            if (swapped_up)
+            if (face_player)
             {
-                finalRot = Quaternion.LookRotation(sphereNormal, childForward);
+                finalRot = Quaternion.LookRotation(childForward, sphereNormal);
             }
             else
             {
-                finalRot = Quaternion.LookRotation(childForward, sphereNormal);
+                finalRot = Quaternion.FromToRotation(Vector3.up, sphereNormal) * child.transform.rotation;
             }
             
 
@@ -150,13 +150,13 @@ public class SphereMap : MonoBehaviour
                 Destroy(t.gameObject);
         }
 
-        PlaceObjectsOnSphere(staticObjectContainer, (_gameobject) => {}, true);
+        PlaceObjectsOnSphere(staticObjectContainer, (_gameobject) => {}, false);
         PlaceObjectsOnSphere(aiObjectContainer, (gameobject) =>
         {
             Destroy(gameobject.GetComponent<ZombieMovement>());
             Destroy(gameobject.GetComponent<NavMeshAgent>());
             
-        }, false);
+        }, true);
 
         if (raycastSource == null) return;
         Vector3 sphereCenter = transform.position;
