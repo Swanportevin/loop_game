@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayDialogue : MonoBehaviour
 {
@@ -13,7 +14,9 @@ public class PlayDialogue : MonoBehaviour
     
     [Header("Playback Settings")]
     public bool loopDialogue = true; // Whether to loop back to the beginning when all lines are complete
-    
+
+    public UnityEvent OnDialogueIsCompleted;
+
     // Private variables
     private int currentLineIndex = 0;
     private bool isDialogueActive = false;
@@ -77,6 +80,8 @@ public class PlayDialogue : MonoBehaviour
         // Check if we've reached the end
         if (currentLineIndex >= dialogueLines.Length)
         {
+
+            OnDialogueIsCompleted.Invoke();
             if (loopDialogue)
             {
                 // Loop back to the beginning

@@ -17359,7 +17359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f13306577a8fd46dd996b0dd0ac2587a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  container: {fileID: 957160755}
+  container: {fileID: 1429808881}
 --- !u!1 &653324839 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6220465460802038346, guid: f2575102c7d7944129cbe2e7cb6db3e0, type: 3}
@@ -22125,6 +22125,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1478869864}
+  - {fileID: 1581428296}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1430099849
@@ -22309,6 +22310,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1234890558084020541, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1478869865}
+    - targetCorrespondingSourceObject: {fileID: 1234890558084020541, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1478869866}
     - targetCorrespondingSourceObject: {fileID: 3646899320035343611, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 650765843}
@@ -22385,6 +22389,22 @@ MonoBehaviour:
   - No use dilly-dallying over here
   - Maybe someone has a map round here
   loopDialogue: 0
+  OnDialogueIsCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1478869866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957160755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1192afdfbd931419ca106bb652182dd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1581428298}
 --- !u!1 &1492706928 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5329163688850456213, guid: f2575102c7d7944129cbe2e7cb6db3e0, type: 3}
@@ -22915,6 +22935,159 @@ MonoBehaviour:
   m_IgnoreFromBuild: 1
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
+--- !u!1001 &1581428295
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1429808882}
+    m_Modifications:
+    - target: {fileID: 1234890558084020541, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_Name
+      value: Weapon Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: 1234890558084020541, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 59.799988
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 13.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 26.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2998447288704982318, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3646899320035343611, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1234890558084020541, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1581428301}
+    - targetCorrespondingSourceObject: {fileID: 1234890558084020541, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1581428300}
+    - targetCorrespondingSourceObject: {fileID: 3646899320035343611, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1581428299}
+  m_SourcePrefab: {fileID: 100100000, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+--- !u!4 &1581428296 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1528020457826411136, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+  m_PrefabInstance: {fileID: 1581428295}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1581428297 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3646899320035343611, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+  m_PrefabInstance: {fileID: 1581428295}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1581428298 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1234890558084020541, guid: db356463cbf5747e4a0e24ab5783fb0a, type: 3}
+  m_PrefabInstance: {fileID: 1581428295}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1581428299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581428297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f13306577a8fd46dd996b0dd0ac2587a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  container: {fileID: 1429808881}
+--- !u!114 &1581428300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581428298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1192afdfbd931419ca106bb652182dd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+--- !u!114 &1581428301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581428298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da8593f0064747d49c4b46ba97f573f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DialougeManager: {fileID: 1893707268}
+  dialogueLines:
+  - Hey!
+  - What are you doing!
+  - That weapon is not fit for this place
+  - Here have a flamethrower
+  loopDialogue: 0
+  OnDialogueIsCompleted:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1584115199 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6778785711770364703, guid: f2575102c7d7944129cbe2e7cb6db3e0, type: 3}
@@ -24430,7 +24603,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueTextBox: {fileID: 1288787711}
-  dialoguePanel: {fileID: 0}
+  dialoguePanel: {fileID: 1674518389}
   typingSpeed: 0.05
   useTypingAnimation: 1
   hideDelayAfterCompletion: 2
