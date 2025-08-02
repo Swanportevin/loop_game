@@ -5,8 +5,6 @@ using UnityEngine;
 public class CamShooting : MonoBehaviour
 {
     // Start is called before the first frame update
-    public LayerMask ZombieLayer; // Layer for zombies
-
     // Update is called once per frame
     void Update()
     {
@@ -20,12 +18,15 @@ public class CamShooting : MonoBehaviour
     {
         Ray ray = new Ray(gameObject.transform.position, gameObject.transform.forward);
 
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, ZombieLayer))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f))
         {
-            string originalName = hitInfo.collider.name.Replace("(Clone)", "").Trim();
-            GameObject OriginalZombie = GameObject.Find(originalName);
-            OriginalZombie.GetComponent<ZombieAnimation>().health -= 1;
-            StartCoroutine(PlayHitAnimation(OriginalZombie));
+            if (hitInfo.collider.CompareTag("zombie"))
+            {
+                string originalName = hitInfo.collider.name.Replace("(Clone)", "").Trim();
+                GameObject OriginalZombie = GameObject.Find(originalName);
+                OriginalZombie.GetComponent<ZombieAnimation>().health -= 1;
+                StartCoroutine(PlayHitAnimation(OriginalZombie));
+            }
         }
     }
 
