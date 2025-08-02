@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -14,9 +15,9 @@ public class GameManager : MonoBehaviour
     private int instanceCount = 0;
     public TextMeshProUGUI ScoreText;
     public TextMeshProUGUI GameOverText;
-    public TextMeshProUGUI PlayerHealthText;
     public int PlayerHealth = 10;          // Player health
     public int Score = 0;
+    public Image[] Hearts;
 
     void Start()
     {
@@ -26,8 +27,6 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         ScoreText.text = "Zombie Kill: " + Score.ToString();
-        PlayerHealthText.text = "Player Health: " + PlayerHealth.ToString();
-
         if (PlayerHealth <= 0)
         {
             GameOver();
@@ -43,15 +42,15 @@ public class GameManager : MonoBehaviour
             obj.name = "ZombieNumber" + instanceCount.ToString();
             zombieCount++;
             instanceCount++;
-            yield return new WaitForSeconds(Random.Range(1f, 5f)); // Wait before spawning the next one
+            yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 5f)); // Wait before spawning the next one
         }
     }
 
     Vector3 GetRandomPositionInArea()
     {
         float halfSize = spawnAreaSize / 2f;
-        float x = Random.Range(-halfSize, halfSize);
-        float z = Random.Range(-halfSize, halfSize);
+        float x = UnityEngine.Random.Range(-halfSize, halfSize);
+        float z = UnityEngine.Random.Range(-halfSize, halfSize);
         float y = 0f; // Slightly above ground
 
         return PlayerOrigin.transform.position + new Vector3(x, y, z);
@@ -62,5 +61,20 @@ public class GameManager : MonoBehaviour
         GameOverText.text = "Game Over! Final Score: " + Score.ToString();
         GameOverText.gameObject.SetActive(true);
         Time.timeScale = 0; // Stop the game
+    }
+
+    public void UpdateHearts()
+    {
+        PlayerHealth -= 1;
+        Debug.Log("Updating Hearts. Current Player Health: " + PlayerHealth);
+        string heartName = "EmptyHeart" + (10 - PlayerHealth).ToString();
+        foreach (var heart in Hearts)
+        {
+            if (heart != null && heart.gameObject.name == heartName)
+            {
+                heart.gameObject.SetActive(true);
+                break;
+            }
+        }
     }
 }

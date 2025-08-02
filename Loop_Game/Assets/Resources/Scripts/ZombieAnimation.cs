@@ -63,7 +63,7 @@ public class ZombieAnimation : MonoBehaviour
         if (mAnimator != null)
         {
             mAnimator.SetTrigger("Punch");
-            FindAnyObjectByType<GameManager>().PlayerHealth -= 1;
+            FindAnyObjectByType<GameManager>().UpdateHearts();
         }
     }
 
