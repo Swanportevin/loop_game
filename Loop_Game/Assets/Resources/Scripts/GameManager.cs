@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,16 +13,25 @@ public class GameManager : MonoBehaviour
     public int zombieCount = 0;
     private int instanceCount = 0;
     public TextMeshProUGUI ScoreText;
+    public TextMeshProUGUI GameOverText;
+    public TextMeshProUGUI PlayerHealthText;
+    public int PlayerHealth = 10;          // Player health
     public int Score = 0;
-    
+
     void Start()
     {
         StartCoroutine(SpawnZombiesLoop());
     }
-    
+
     void Update()
     {
-        ScoreText.text = "Zombie Kill: "+Score.ToString();
+        ScoreText.text = "Zombie Kill: " + Score.ToString();
+        PlayerHealthText.text = "Player Health: " + PlayerHealth.ToString();
+
+        if (PlayerHealth <= 0)
+        {
+            GameOver();
+        }
     }
 
     private IEnumerator SpawnZombiesLoop()
@@ -45,5 +55,12 @@ public class GameManager : MonoBehaviour
         float y = 0f; // Slightly above ground
 
         return PlayerOrigin.transform.position + new Vector3(x, y, z);
+    }
+
+    private void GameOver()
+    {
+        GameOverText.text = "Game Over! Final Score: " + Score.ToString();
+        GameOverText.gameObject.SetActive(true);
+        Time.timeScale = 0; // Stop the game
     }
 }
