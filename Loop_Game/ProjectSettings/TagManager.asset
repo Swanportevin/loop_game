@@ -6,15 +6,17 @@ TagManager:
   tags:
   - forest
   - zombie
+  - buildings
+  - wayfindertarget
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - buildings
   - Water
   - UI
   - zombie
-  - buildings
+  - 
   - 
   - 
   - 
