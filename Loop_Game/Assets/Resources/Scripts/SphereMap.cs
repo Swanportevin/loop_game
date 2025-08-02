@@ -11,7 +11,9 @@ public class SphereMap : MonoBehaviour
     public GameObject raycastSource;
     public GameObject staticObjectContainer;
     public GameObject aiObjectContainer;
+    public GameObject buildingsContainer;
     public GameObject playerOrigin;
+
 
     Vector3 GetPointOnSmallCircle(Vector3 hitpoint, Vector3 sphereCenter, float radius, float geodesicDistance, Vector3 right, float angleDegrees)
     {
@@ -151,6 +153,7 @@ public class SphereMap : MonoBehaviour
         }
 
         PlaceObjectsOnSphere(staticObjectContainer, (_gameobject) => {}, false);
+        PlaceObjectsOnSphere(buildingsContainer, (_gameobject) => {}, false);
         PlaceObjectsOnSphere(aiObjectContainer, (gameobject) =>
         {
             Destroy(gameobject.GetComponent<ZombieMovement>());
