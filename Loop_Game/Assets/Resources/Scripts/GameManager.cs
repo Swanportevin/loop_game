@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,10 +11,17 @@ public class GameManager : MonoBehaviour
     public GameObject ParentObject;       // Parent object for spawned zombies
     public int zombieCount = 0;
     private int instanceCount = 0;
+    public TextMeshProUGUI ScoreText;
+    public int Score = 0;
     
     void Start()
     {
         StartCoroutine(SpawnZombiesLoop());
+    }
+    
+    void Update()
+    {
+        ScoreText.text = "Zombie Kill: "+Score.ToString();
     }
 
     private IEnumerator SpawnZombiesLoop()
@@ -22,7 +30,7 @@ public class GameManager : MonoBehaviour
         {
             Vector3 spawnPosition = GetRandomPositionInArea();
             GameObject obj = Instantiate(zombiePrefab, spawnPosition, Quaternion.identity, ParentObject.transform);
-            obj.name = "ZombieNumber"+instanceCount.ToString();
+            obj.name = "ZombieNumber" + instanceCount.ToString();
             zombieCount++;
             instanceCount++;
             yield return new WaitForSeconds(Random.Range(1f, 5f)); // Wait before spawning the next one

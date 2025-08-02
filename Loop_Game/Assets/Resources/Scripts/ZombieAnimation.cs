@@ -21,6 +21,7 @@ public class ZombieAnimation : MonoBehaviour
         mAnimator.SetTrigger("Die");
         FindObjectOfType<GameManager>().zombieCount--;
         yield return new WaitForSeconds(0.8f); // Wait for the death animation to finish
+        FindAnyObjectByType<GameManager>().Score += 1; // Increment score
         Destroy(gameObject); // Destroy the zombie after death animation   
     }
 
