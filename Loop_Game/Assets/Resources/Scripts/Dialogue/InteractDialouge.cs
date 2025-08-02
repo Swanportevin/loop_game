@@ -11,7 +11,7 @@ public class InteractDialouge : MonoBehaviour
     public void Interact()
     {
         String original_name = transform.parent.name.Replace("(Clone)", "");
-        // Debug.Log($"Looking for {original_name}");
+        Debug.Log($"Looking for {original_name}");
         for (int i = 0; i < container.transform.childCount; i++)
         {
             GameObject child = container.transform.GetChild(i).gameObject;

@@ -53,7 +53,6 @@ public class InteractBuilding : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 GameObject hitObject = hit.collider.gameObject;
-                Debug.Log(hitObject.name);
                 InteractDialouge interaction = hitObject.GetComponent<InteractDialouge>();
                 if (interaction != null)
                 {
