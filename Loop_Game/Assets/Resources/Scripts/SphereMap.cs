@@ -97,7 +97,7 @@ public class SphereMap : MonoBehaviour
             Vector2 right_raycast = new Vector2(_right_raycast.x, _right_raycast.z);
 
             // 4. Raycast from offset position (slightly off sphere) to center
-            Vector3 newPoint = GetPointOnSmallCircle(hitpoint, sphereCenter, radius, dist, right_raycast, angle);
+            Vector3 newPoint = GetPointOnSmallCircle(hitpoint, sphereCenter, radius, dist, right_raycast, -angle);
             Vector3 normal = (newPoint - sphereCenter).normalized;
             Vector3 offsetRayOrigin = newPoint + normal * 2f; // offset a bit off sphere
 
