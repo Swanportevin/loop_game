@@ -10,8 +10,10 @@ public class nextWayfindTarget : MonoBehaviour
         Debug.Log($"Next Target {target.transform.name}");
         if (target != null && transform.tag == "wayfindertarget")
         {
+            Debug.Log($"Target Set successfully");
+
             target.tag = "wayfindertarget";
-            transform.tag = "wayfindertarget";
+            transform.tag = "Untagged";
         }
     }
 }

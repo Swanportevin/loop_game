@@ -9,7 +9,7 @@ public class SphereMap : MonoBehaviour
 {
     // The object from which to cast the ray, selectable in Inspector
     public GameObject raycastSource;
-    public GameObject staticObjectContainer;
+    public GameObject staticObjectContainerObject;
     public GameObject aiObjectContainer;
     public GameObject buildingsContainer;
     public GameObject bulletsContainer;
@@ -152,10 +152,25 @@ public class SphereMap : MonoBehaviour
             if (t.gameObject != this.gameObject)
                 Destroy(t.gameObject);
         }
-
-        PlaceObjectsOnSphere(staticObjectContainer, (_gameobject) => {}, false);
-        PlaceObjectsOnSphere(buildingsContainer, (_gameobject) => {}, false);
-        PlaceObjectsOnSphere(bulletsContainer, (_gameobject) => {}, false);
+        // Loop through staticObjectContainer array and place each on the sphere
+        if (staticObjectContainerObject != null && playerOrigin != null)
+        {
+            float maxDistance = 300f; // Set your desired max distance here
+            Vector3 playerPos = playerOrigin.transform.position;
+            foreach (Transform child in staticObjectContainerObject.transform)
+            {
+            if (child != null)
+            {
+                float dist = Vector3.Distance(playerPos, child.position);
+                if (dist <= maxDistance)
+                {
+                PlaceObjectsOnSphere(child.gameObject, (_gameobject) => { }, false);
+                }
+            }
+            }
+        }
+        PlaceObjectsOnSphere(buildingsContainer, (_gameobject) => { }, false);
+        PlaceObjectsOnSphere(bulletsContainer, (_gameobject) => { }, false);
         PlaceObjectsOnSphere(aiObjectContainer, (gameobject) =>
         {
             Destroy(gameobject.GetComponent<ZombieMovement>());
