@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Splash Scene.unity
+    guid: 1e5fc8d400669412a84b382e0eba1a4e
+  - enabled: 1
+    path: Assets/Scenes/Sphere Projection.unity
+    guid: c4a2befd87a3f43f1bbe7af6206ea6ef
+  - enabled: 1
+    path: Assets/Scenes/Game Over.unity
+    guid: b51d7dbb432cf4193809615217f56b81
   m_configObjects: {}

@@ -58,9 +58,8 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
-        GameOverText.text = "Game Over! Final Score: " + Score.ToString();
-        GameOverText.gameObject.SetActive(true);
-        Time.timeScale = 0; // Stop the game
+        GoToScene scene = gameObject.GetComponent<GoToScene>();
+        scene.StartGame();
     }
 
     public void UpdateHearts()
