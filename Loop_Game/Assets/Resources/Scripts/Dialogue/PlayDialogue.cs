@@ -76,12 +76,16 @@ public class PlayDialogue : MonoBehaviour
         
         // Advance to next line
         currentLineIndex++;
-        
+
+        if (currentLineIndex == dialogueLines.Length - 1)
+        {
+            OnDialogueIsCompleted.Invoke();
+        }
+
         // Check if we've reached the end
         if (currentLineIndex >= dialogueLines.Length)
         {
 
-            OnDialogueIsCompleted.Invoke();
             if (loopDialogue)
             {
                 // Loop back to the beginning

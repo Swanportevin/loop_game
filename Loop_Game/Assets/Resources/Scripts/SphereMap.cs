@@ -12,6 +12,7 @@ public class SphereMap : MonoBehaviour
     public GameObject staticObjectContainer;
     public GameObject aiObjectContainer;
     public GameObject buildingsContainer;
+    public GameObject bulletsContainer;
     public GameObject playerOrigin;
 
 
@@ -154,6 +155,7 @@ public class SphereMap : MonoBehaviour
 
         PlaceObjectsOnSphere(staticObjectContainer, (_gameobject) => {}, false);
         PlaceObjectsOnSphere(buildingsContainer, (_gameobject) => {}, false);
+        PlaceObjectsOnSphere(bulletsContainer, (_gameobject) => {}, false);
         PlaceObjectsOnSphere(aiObjectContainer, (gameobject) =>
         {
             Destroy(gameobject.GetComponent<ZombieMovement>());
